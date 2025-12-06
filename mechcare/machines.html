@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machines | MechCare</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <span
+                    style="font-weight: 800; font-size: 1.5rem; background: linear-gradient(135deg, #00f2ea 0%, #00a8ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">MECHCARE</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="machines.html" class="nav-link active">Machines</a>
+                <a href="reports.html" class="nav-link">Reports</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mt-md">
+
+        <!-- Page Header -->
+        <section class="card mb-md"
+            style="background: linear-gradient(135deg, rgba(26, 31, 41, 0.9), rgba(15, 18, 24, 0.9)); border: 1px solid var(--primary-dim);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h1 class="mb-sm" style="font-size: 2rem;">Machine Management</h1>
+                    <p class="text-muted">View, add, edit, and manage all your machines</p>
+                </div>
+                <a href="add-machine.html" class="btn btn-primary">+ Add Machine</a>
+            </div>
+        </section>
+
+        <!-- Search and Filter -->
+        <div class="card mb-md">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <input type="text" id="search-input" placeholder="Search machines..." 
+                    style="flex: 1; min-width: 250px; padding: 0.875rem 1.25rem; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem;">
+                <select id="status-filter" 
+                    style="padding: 0.875rem 1.25rem; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem; cursor: pointer;">
+                    <option value="all">All Status</option>
+                    <option value="Healthy">Healthy</option>
+                    <option value="Due Soon">Due Soon</option>
+                    <option value="Overdue">Overdue</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Machines Grid -->
+        <div id="machines-grid" class="grid-cols-3">
+            <!-- Machines will be injected here by JS -->
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <p class="text-muted">Loading machines...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div class="card" style="max-width: 500px; margin: 2rem;">
+            <h2 class="mb-md">Confirm Delete</h2>
+            <p class="text-muted mb-md">Are you sure you want to delete this machine? This action cannot be undone.</p>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button id="cancel-delete" class="btn btn-outline">Cancel</button>
+                <button id="confirm-delete" class="btn" style="background: var(--danger-gradient); color: white;">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" style="display: none; position: fixed; top: 2rem; right: 2rem; z-index: 10000; min-width: 300px;">
+        <div class="card" style="background: var(--bg-elevated); border-left: 4px solid var(--success);">
+            <p id="notification-message" style="margin: 0;"></p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script>
+        // Machines page logic
+        let machineToDelete = null;
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            const card = notification.querySelector('.card');
+            
+            notificationMessage.textContent = message;
+            card.style.borderLeftColor = type === 'success' ? 'var(--success)' : 'var(--danger)';
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Render machines
+        function renderMachines(filter = 'all', searchTerm = '') {
+            const machines = MechCare.getAllMachines();
+            const grid = document.getElementById('machines-grid');
+
+            // Filter machines
+            let filteredMachines = machines.filter(machine => {
+                const status = MechCare.getMachineStatus(machine);
+                const matchesStatus = filter === 'all' || status.status === filter;
+                const matchesSearch = machine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    machine.type.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesStatus && matchesSearch;
+            });
+
+            if (filteredMachines.length === 0) {
+                grid.innerHTML = `
+                    <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem; border-style: dashed;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                        <h3 class="mb-md">No machines found</h3>
+                        <p class="text-muted mb-md">Try adjusting your search or filter criteria.</p>
+                        <a href="add-machine.html" class="btn btn-primary">Add Machine</a>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = '';
+            filteredMachines.forEach(machine => {
+                const status = MechCare.getMachineStatus(machine);
+
+                const card = document.createElement('div');
+                card.className = 'card animate-fade-in';
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1.1rem;">${machine.name}</h3>
+                        <span class="badge badge-${status.color}">${status.status}</span>
+                    </div>
+                    <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1.5rem;">${machine.type}</p>
+                    
+                    <div style="margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                        <span style="display: inline-block; width: 20px;">📍</span> ${machine.location || 'Not specified'}
+                    </div>
+                    <div style="margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                        <span style="display: inline-block; width: 20px;">🏭</span> ${machine.manufacturer || 'Unknown'}
+                    </div>
+                    <div style="margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                        <span style="display: inline-block; width: 20px;">📅</span> Every ${machine.interval} days
+                    </div>
+                    <div style="margin-bottom: 1.5rem; font-size: 0.85rem;" class="text-${status.color}">
+                        <span style="display: inline-block; width: 20px;">⏱</span> ${status.days} days ${status.status === 'Overdue' ? 'overdue' : 'until maintenance'}
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div style="background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px; margin-bottom: 0.5rem;">
+                        <div style="width: ${Math.max(5, 100 - (status.days * 2))}%; background: var(--${status.color}); height: 100%; border-radius: 2px;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                        <span>Maintenance Progress</span>
+                        <span>${Math.max(5, 100 - (status.days * 2))}%</span>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-light); padding-top: 1rem; display: flex; gap: 0.5rem;">
+                        <a href="machine-details.html?id=${machine.id}" class="btn btn-outline" style="flex: 1; padding: 0.625rem 1rem; font-size: 0.875rem;">View Details</a>
+                        <button onclick="editMachine('${machine.id}')" class="btn btn-outline" style="padding: 0.625rem 1rem; font-size: 0.875rem;">✏️ Edit</button>
+                        <button onclick="deleteMachine('${machine.id}')" class="btn" style="background: var(--danger-gradient); color: white; padding: 0.625rem 1rem; font-size: 0.875rem;">🗑️</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Edit machine
+        function editMachine(id) {
+            window.location.href = `add-machine.html?id=${id}`;
+        }
+
+        // Delete machine
+        function deleteMachine(id) {
+            machineToDelete = id;
+            document.getElementById('delete-modal').style.display = 'flex';
+        }
+
+        // Confirm delete
+        document.getElementById('confirm-delete').addEventListener('click', () => {
+            if (machineToDelete) {
+                MechCare.deleteMachine(machineToDelete);
+                document.getElementById('delete-modal').style.display = 'none';
+                showNotification('Machine deleted successfully', 'success');
+                renderMachines();
+                machineToDelete = null;
+            }
+        });
+
+        // Cancel delete
+        document.getElementById('cancel-delete').addEventListener('click', () => {
+            document.getElementById('delete-modal').style.display = 'none';
+            machineToDelete = null;
+        });
+
+        // Search and filter
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const searchTerm = e.target.value;
+            const filter = document.getElementById('status-filter').value;
+            renderMachines(filter, searchTerm);
+        });
+
+        document.getElementById('status-filter').addEventListener('change', (e) => {
+            const filter = e.target.value;
+            const searchTerm = document.getElementById('search-input').value;
+            renderMachines(filter, searchTerm);
+        });
+
+        // Initial render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMachines();
+        });
+    </script>
+</body>
+
+</html>

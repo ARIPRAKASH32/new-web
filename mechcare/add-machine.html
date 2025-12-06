@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Machine | MechCare</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <span
+                    style="font-weight: 800; font-size: 1.5rem; background: linear-gradient(135deg, #00f2ea 0%, #00a8ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">MECHCARE</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="machines.html" class="nav-link">Machines</a>
+                <a href="reports.html" class="nav-link">Reports</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mt-md">
+
+        <!-- Page Header -->
+        <div style="margin-bottom: 2rem;">
+            <a href="machines.html" class="text-primary" style="font-size: 0.9rem; text-decoration: none;">← Back to
+                Machines</a>
+            <h1 class="mt-md mb-sm" style="font-size: 2rem;" id="page-title">Add New Machine</h1>
+            <p class="text-muted">Fill in the details to add a new machine to your inventory</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card" style="max-width: 800px;">
+            <form id="machine-form">
+
+                <!-- Machine Name -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="machine-name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                        Machine Name <span style="color: var(--danger);">*</span>
+                    </label>
+                    <input type="text" id="machine-name" name="name" required placeholder="e.g., CNC Mill 3000"
+                        style="width: 100%; padding: 0.875rem 1.25rem; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem;">
+                </div>
+
+                <!-- Machine Type -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="machine-type" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                        Machine Type <span style="color: var(--danger);">*</span>
+                    </label>
+                    <input type="text" id="machine-type" name="type" required placeholder="e.g., CNC Milling Machine"
+                        style="width: 100%; padding: 0.875rem 1.25rem; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem;">
+                </div>
+
+                <!-- Two Column Layout -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+
+                    <!-- Manufacturer -->
+                    <div>
+                        <label for="manufacturer" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                            Manufacturer
+                        </label>
+                        <input type="text" id="manufacturer" name="manufacturer" placeholder="e.g., Haas Automation"
+                            style="width: 100%; padding: 0.875rem 1.25rem; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem;">
+                    </div>
+
+                    <!-- Model -->
+                    <div>
+                        <label for="model" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                            Model
+                        </label>
+                        <input type="text" id="model" name="model" placeholder="e.g., VF-3"
+                            style="width: 100%; padding: 0.875rem 1.25rem; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem;">
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="location" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                        Location
+                    </label>
+                    <input type="text" id="location" name="location" placeholder="e.g., Workshop A"
+                        style="width: 100%; padding: 0.875rem 1.25rem; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem;">
+                </div>
+
+                <!-- Two Column Layout -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+
+                    <!-- Maintenance Interval -->
+                    <div>
+                        <label for="interval" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                            Maintenance Interval (days) <span style="color: var(--danger);">*</span>
+                        </label>
+                        <input type="number" id="interval" name="interval" required min="1" value="30"
+                            style="width: 100%; padding: 0.875rem 1.25rem; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem;">
+                    </div>
+
+                    <!-- Last Maintenance Date -->
+                    <div>
+                        <label for="last-maintenance" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                            Last Maintenance Date <span style="color: var(--danger);">*</span>
+                        </label>
+                        <input type="date" id="last-maintenance" name="lastMaintenance" required
+                            style="width: 100%; padding: 0.875rem 1.25rem; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem;">
+                    </div>
+                </div>
+
+                <!-- Installation Date -->
+                <div style="margin-bottom: 2rem;">
+                    <label for="installed-date" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                        Installation Date
+                    </label>
+                    <input type="date" id="installed-date" name="installedDate"
+                        style="width: 100%; padding: 0.875rem 1.25rem; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 1rem;">
+                </div>
+
+                <!-- Form Actions -->
+                <div
+                    style="border-top: 1px solid var(--border-light); padding-top: 1.5rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                    <a href="machines.html" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        <span id="submit-text">Add Machine</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="notification"
+        style="display: none; position: fixed; top: 2rem; right: 2rem; z-index: 10000; min-width: 300px;">
+        <div class="card" style="background: var(--bg-elevated); border-left: 4px solid var(--success);">
+            <p id="notification-message" style="margin: 0;"></p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script>
+        // Check if editing existing machine
+        const urlParams = new URLSearchParams(window.location.search);
+        const machineId = urlParams.get('id');
+        let isEditMode = false;
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            const card = notification.querySelector('.card');
+
+            notificationMessage.textContent = message;
+            card.style.borderLeftColor = type === 'success' ? 'var(--success)' : 'var(--danger)';
+            notification.style.display = 'block';
+
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Load machine data if editing
+        if (machineId) {
+            isEditMode = true;
+            const machine = MechCare.getMachine(machineId);
+
+            if (machine) {
+                document.getElementById('page-title').textContent = 'Edit Machine';
+                document.getElementById('submit-text').textContent = 'Save Changes';
+
+                // Populate form
+                document.getElementById('machine-name').value = machine.name;
+                document.getElementById('machine-type').value = machine.type;
+                document.getElementById('manufacturer').value = machine.manufacturer || '';
+                document.getElementById('model').value = machine.model || '';
+                document.getElementById('location').value = machine.location || '';
+                document.getElementById('interval').value = machine.interval;
+                document.getElementById('last-maintenance').value = machine.lastMaintenance.split('T')[0];
+                document.getElementById('installed-date').value = machine.installedDate || '';
+            }
+        } else {
+            // Set default last maintenance to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('last-maintenance').value = today;
+            document.getElementById('installed-date').value = today;
+        }
+
+        // Handle form submission
+        document.getElementById('machine-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const machineData = {
+                name: formData.get('name'),
+                type: formData.get('type'),
+                manufacturer: formData.get('manufacturer'),
+                model: formData.get('model'),
+                location: formData.get('location'),
+                interval: parseInt(formData.get('interval')),
+                lastMaintenance: new Date(formData.get('lastMaintenance')).toISOString(),
+                installedDate: formData.get('installedDate') || new Date().toISOString().split('T')[0]
+            };
+
+            try {
+                if (isEditMode) {
+                    // Update existing machine
+                    MechCare.updateMachine(machineId, machineData);
+                    showNotification('Machine updated successfully!', 'success');
+                } else {
+                    // Add new machine
+                    MechCare.addMachine(machineData);
+                    showNotification('Machine added successfully!', 'success');
+                }
+
+                // Redirect to machines page after a short delay
+                setTimeout(() => {
+                    window.location.href = 'machines.html';
+                }, 1500);
+
+            } catch (error) {
+                showNotification('Error saving machine. Please try again.', 'error');
+                console.error('Error:', error);
+            }
+        });
+
+        // Add input focus effects
+        document.querySelectorAll('input, select, textarea').forEach(input => {
+            input.addEventListener('focus', function () {
+                this.style.borderColor = 'var(--primary)';
+                this.style.boxShadow = '0 0 0 3px rgba(0, 168, 255, 0.1)';
+            });
+
+            input.addEventListener('blur', function () {
+                this.style.borderColor = 'var(--border-light)';
+                this.style.boxShadow = 'none';
+            });
+        });
+    </script>
+</body>
+
+</html>
